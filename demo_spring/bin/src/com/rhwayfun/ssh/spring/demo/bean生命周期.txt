@@ -1,0 +1,55 @@
+完整的bean的生命周期
+	一、使用ApplicationContext获取bean的生命周期
+1、实例化*
+	spring容器会首先调用默认构造方法创建类实例
+2、属性注入*
+	调用set方法设置属性
+3、调用BeanNameAware接口的方法
+	实现public void setBeanName(String arg0) {
+		System.out.println("setBeanName" + arg0);
+	}
+4、调用BeanFactoryAware接口
+	实现public void setBeanFactory(BeanFactory arg0) throws BeansException {
+		System.out.println("setBeanFactory" + arg0);
+	}
+5、调用ApplicationContextAware接口
+	实现public void setApplicationContext(ApplicationContext arg0)
+			throws BeansException {
+		System.out.println("setApplicationContext" + arg0);
+	}
+6、调用BeanPostProcessor接口*
+	实现before方法
+	public Object postProcessBeforeInitialization(Object arg0, String arg1)
+			throws BeansException {
+		System.out.println("postProcessBefore" + arg0);
+		return arg0;
+	}
+7、调用InitializingBean接口
+	实现//这里实现的是spring容器的初始化方法
+	public void afterPropertiesSet() throws Exception {
+		System.out.println("afterPropertiesSet:在after方法执行前执行");
+	}
+	注意：该方法会在BeanPostProcessor接口的after方法之前执行
+8、调用定制的初始化方法
+	<bean id="checkUserXml" init-method="init" class="com.rhwayfun.ssh.spring.demo.CheckUserXml">
+		<property name="username" value="xiaofan"/>
+	</bean>
+9、调用BeanPostProcessor接口的after方法
+	实现public Object postProcessAfterInitialization(Object arg0, String arg1)
+			throws BeansException {
+		System.out.println("postProcessAfter" + arg0);
+		return arg0;
+	}
+10、使用实例的bean*
+11、关闭spring容器*
+12、调用DisposableBean接口
+	实现destroy方法
+13、定制的销毁方法
+	<bean id="checkUserXml" destroy-method="destroy" class="com.rhwayfun.ssh.spring.demo.CheckUserXml">
+		<property name="username" value="xiaofan"/>
+	</bean>
+
+	附：带*的步骤是开发中最新涉及的
+	
+	二、使用BeanFactory获取bean的生命周期
+	步骤：1->2->3->4->7->8

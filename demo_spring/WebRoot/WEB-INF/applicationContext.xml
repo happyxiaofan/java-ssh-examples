@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+"http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<!-- 定义国际化消息 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>
+				com.rhwayfun.ssh.spring.resources.ApplicationResources
+			</value>
+		</property>
+	</bean>
+	
+	<!--  配置数据源与事务 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/test</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>1209</value>
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+	<!-- 定义DAO -->
+	<bean id="userDAO" class="com.rhwayfun.ssh.spring.dao.UserDAO">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+	
+	<!-- 配置一个测试Bean -->
+	<bean id="HelloWorld" class="com.rhwayfun.ssh.spring.demo.HelloWorld">
+		<property name="message"><value>World</value></property>
+	</bean>
+	
+	<!-- 配置测试表单的HandleMapping -->
+	<bean id="testMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/test.do">testAction</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 定义登录表单的映射 -->
+	<bean id="loginMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/login.do">loginAction</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 配置Controller(Actions)————测试action -->
+	<bean id="testAction" class="com.rhwayfun.ssh.spring.actions.TestAction">
+		<property name="commandClass">
+			<value>com.rhwayfun.ssh.spring.forms.TestForm</value>
+		</property>
+		<!-- 指定失败要返回的页面 -->
+		<property name="formView">
+			<value>input</value>
+		</property>
+		<!-- 指定成功要返回的页面 -->
+		<property name="successView">
+			<value>success</value>
+		</property>
+	</bean>
+	<!-- 配置登录表单的action -->
+	<bean id="loginAction"
+		class="com.rhwayfun.ssh.spring.actions.LoginAction">
+		<property name="commandClass">
+			<value>com.rhwayfun.ssh.spring.forms.LoginForm</value>
+		</property>
+		<!--指定DAO类 -->
+		<property name="userDAO" ref="userDAO"/>
+		<!-- 指定验证类 -->
+		<property name="validator">
+			<ref local="loginValidator" />
+		</property>
+		<!-- 指定失败要返回的页面 -->
+		<property name="formView">
+			<value>login</value>
+		</property>
+		<!-- 指定成功要返回的页面 -->
+		<property name="successView">
+			<value>success</value>
+		</property>
+	</bean>
+	
+	<!-- 配置视图解析器 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass">
+			<value>
+				org.springframework.web.servlet.view.InternalResourceView
+			</value>
+		</property>
+		<!-- JSP都放在/目录下 -->
+		<property name="prefix">
+			<value>/</value>
+		</property>
+		<!-- JSP页面的后缀都四.JSP -->
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+	<!-- 配置表单登录校验器 -->
+	<bean id="loginValidator" class="com.rhwayfun.ssh.spring.validators.LoginValidator"/>
+	
+	<!-- 配置UserDAO事务代理 -->
+	<!--<bean id="UserDAOProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="userDAO" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+--></beans>

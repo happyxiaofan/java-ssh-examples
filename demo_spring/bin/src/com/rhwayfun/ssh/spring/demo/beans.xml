@@ -1,0 +1,111 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	
+	<!-- 配置简单的用户验证方式 -->
+	<!--<bean id="checkUserDao" class="com.rhwayfun.ssh.spring.demo.CheckUserDao">
+		<property name="username" value="rhwayfun"/>
+	</bean>
+	-->
+	<!-- init-method实现的是定制的初始化方法 
+		destroy-method="destroy"
+		property:容器会使用类的set方法进行属性注入
+	-->
+	<bean id="checkUserXml" init-method="init"  class="com.rhwayfun.ssh.spring.demo.CheckUserXml">
+		<property name="username" value="xiaofan"/>
+	</bean>
+	
+	<!-- 配置Department的Bean实例 -->
+	<bean id="department" class="com.rhwayfun.ssh.spring.demo.Department">
+		<property name="deptName" value="研发部"/>
+		<!-- 给数组注入值 -->
+		<property name="enames">
+			<list>
+				<value>黑白无常</value>
+				<value>温韬</value>
+				<value>倾国倾城</value>
+			</list>
+		</property>
+		<!-- 给list集合注入值 -->
+		<property name="employees">
+			<list>
+				<ref bean="emp1"/>
+				<ref bean="emp2"/>
+				<ref bean="emp3"/>
+			</list>
+		</property>
+		<!-- 给Set集合注入值 -->
+		<property name="employeeSets">
+			<set>
+				<ref bean="emp1"/>
+				<ref bean="emp2"/>
+				<ref bean="emp3"/>
+			</set>
+		</property>
+		<!-- 给map集合注入值 -->
+		<property name="employeeMaps">
+			<map>
+				<entry key="1" value-ref="emp1"/>
+				<entry key="2" value-ref="emp2"/>
+				<entry key="3" value-ref="emp3"/>
+			</map>
+		</property>
+		<!-- 给Properties注入值 -->
+		<property name="properties">
+			<props>
+				<prop key="1">张子凡</prop>
+				<prop key="2">林轩</prop>
+				<prop key="3">李星云</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 配置Employee的Bean实例 -->
+	<bean id="emp1" class="com.rhwayfun.ssh.spring.demo.Employee">
+		<property name="ename" value="水火判官"/>
+	</bean>
+	<bean id="emp2" class="com.rhwayfun.ssh.spring.demo.Employee">
+		<property name="ename" value="孟婆"/>
+	</bean>
+	<bean id="emp3" class="com.rhwayfun.ssh.spring.demo.Employee">
+		<property name="ename" value="五大阎王"/>
+	</bean>
+	
+	<!-- 通过构造函数配置bean -->	
+	<bean id="emp4" class="com.rhwayfun.ssh.spring.demo.Employee">
+		<constructor-arg index="0" type="java.lang.String" value="姬如雪"/>
+		<constructor-arg index="1" type="int" value="22"/>
+	</bean>
+	
+	<!-- 加载db.properties文件 -->
+	<context:property-placeholder location="classpath:com/rhwayfun/ssh/spring/demo/db*.properties"/>
+	<!-- 配置dbUtils -->
+	<bean id="dbUtils" class="com.rhwayfun.ssh.spring.demo.DbUtils">
+		<property name="drv" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="usr" value="${jdbc.username}"/>
+		<property name="pwd" value="${jdbc.password}"/>
+	</bean>
+	<!-- 配置dbUtils2 -->
+	<bean id="dbUtils2" class="com.rhwayfun.ssh.spring.demo.DbUtils">
+		<property name="drv" value="${jdbc.driver2}"/>
+		<property name="url" value="${jdbc.url2}"/>
+		<property name="usr" value="${jdbc.username2}"/>
+		<property name="pwd" value="${jdbc.password2}"/>
+	</bean>
+	
+	
+	<!-- 配置后置处理器 -->
+	<bean id="defBeanPostProcessor" class="com.rhwayfun.ssh.spring.demo.DefBeanPostProcessor"></bean>
+	
+</beans>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<!-- 配置数据源 -->
+	<data-sources>
+		<data-source type="org.apache.commons.dbcp.BasicDataSource">
+			<set-property property="driverClassName"
+				value="com.mysql.jdbc.Driver" />
+			<set-property property="url"
+				value="jdbc:mysql://localhost:3306/test" />
+			<set-property property="username" value="root" />
+			<set-property property="password" value="1209" />
+			<set-property property="maxActive" value="10" />
+			<set-property property="maxWait" value="5000" />
+			<set-property property="defaultAutoCommit" value="false" />
+			<set-property property="defaultReadOnly" value="false" />
+			<!-- 验证连接是否成功 -->
+			<set-property property="validationQuery"
+				value="SELECT COUNT(*) FROM user" />
+		</data-source>
+	</data-sources>
+	<!-- 配置表单组件 -->
+	<form-beans>
+		<!-- 测试表单组件 -->
+		<form-bean name="testForm" type="com.rhwayfun.ssh.struts.forms.TestForm"></form-bean>
+		<!-- 添加登录表单组件 -->
+		<form-bean name="loginForm" type="com.rhwayfun.ssh.struts.forms.LoginForm"></form-bean>
+		<!-- 添加注册表单组件 -->
+		<form-bean name="registerForm" type="com.rhwayfun.ssh.struts.forms.RegisterForm"></form-bean>
+	</form-beans>
+	<global-exceptions />
+	<global-forwards />
+	<!-- 配置操作test表单的action -->
+	<action-mappings>
+		<!-- 配置test表单的action -->
+		<action path="/test" name="testForm" scope="request"
+			type="com.rhwayfun.ssh.struts.actions.TestFormAction" input="/input.jsp">
+			<forward name="success" path="/success.jsp"></forward>
+			<forward name="error" path="/error.jsp"></forward>
+		</action>
+		<!-- 配置默认action -->
+		<action path="/index" forward="/login.jsp"></action>
+		<!-- 配置登录表单的action -->
+		<action path="/login" name="loginForm" scope="request"
+			type="com.rhwayfun.ssh.struts.actions.LoginFormAction" input="/login.jsp">
+			<forward name="success" path="/welcome.jsp"></forward>
+			<forward name="failure" path="/login.jsp"></forward>
+		</action>
+		<!-- 配置登出欢迎页面的action -->
+		<action path="/logout" type="com.rhwayfun.ssh.struts.actions.LogoutFormAction">
+			<forward name="logout" path="/login.jsp" redirect="true"></forward>
+		</action>
+		<!-- 配置注册页面的action -->
+		<action path="/register" name="registerForm" parameter="method" scope="request"
+			type="com.rhwayfun.ssh.struts.actions.RegisterFormAction" input="/register.jsp">
+			<forward name="success" path="/login.jsp"></forward>
+			<forward name="failure" path="/register.jsp"></forward>
+		</action>
+	</action-mappings>
+	
+	<!-- 配置资源文件 -->
+	<message-resources parameter="com.rhwayfun.struts.resources.ApplicationResources" />
+	
+	<!-- 配置Validator校验器组件 -->
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property value="/WEB-INF/validator-rules.xml" property="pathnames"/>
+	</plug-in>
+</struts-config>
+

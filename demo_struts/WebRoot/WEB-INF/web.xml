@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app metadata-complete="true" version="2.5"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee   http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<!-- 配置监听器 -->
+	<listener>
+		<listener-class>com.rhwayfun.ssh.listener.CounterListener</listener-class>
+	</listener>
+	<!-- 配置过滤器 -->
+	<filter>
+		<filter-name>EncodingFilter</filter-name>
+		<filter-class>com.rhwayfun.ssh.filter.EncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>EncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 配置Sitemesh过滤器 -->
+	<filter>
+		<filter-name>sitemesh</filter-name>
+		<filter-class>
+			com.opensymphony.module.sitemesh.filter.PageFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- struts默认配置 -->
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>3</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>3</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<!-- struts标签库配置 -->
+	<jsp-config>
+		<taglib>
+			<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+			<taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+			<taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+			<taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/WEB-INF/struts-nested.tld</taglib-uri>
+			<taglib-location>/WEB-INF/struts-nested.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/WEB-INF/struts-tiles.tld</taglib-uri>
+			<taglib-location>/WEB-INF/struts-tiles.tld</taglib-location>
+		</taglib>
+		
+		<!-- 配置Sitemesh标签库 -->
+		<taglib>
+			<taglib-uri>/WEB-INF/sitemesh-page.tld</taglib-uri>
+			<taglib-location>
+				/WEB-INF/sitemesh-page.tld
+			</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/WEB-INF/sitemesh-decorator.tld</taglib-uri>
+			<taglib-location>
+				/WEB-INF/sitemesh-decorator.tld
+			</taglib-location>
+		</taglib>
+		
+	</jsp-config>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+</web-app>

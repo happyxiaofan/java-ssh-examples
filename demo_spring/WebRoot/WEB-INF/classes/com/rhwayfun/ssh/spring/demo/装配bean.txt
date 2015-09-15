@@ -1,0 +1,64 @@
+	
+	装配bean
+1、scope作用域
+	默认为singleton="true"，如果设置为false，则会使用原型bean。
+	使用原型bean会较大影响性能，通常情况下不要使用原型bean
+2、注入集合类型属性
+	2.1 装配List和数组
+		<!-- 给list集合注入值 -->
+		<property name="employees">
+			<list>
+				<ref bean="emp1"/>
+				<ref bean="emp2"/>
+				<ref bean="emp3"/>
+			</list>
+		</property>
+	2.2 装配Set和Map
+		<!-- 给Set集合注入值 -->
+		<property name="employeeSets">
+			<set>
+				<ref bean="emp1"/>
+				<ref bean="emp2"/>
+				<ref bean="emp3"/>
+			</set>
+		</property>
+		<!-- 给map集合注入值 -->
+		<property name="employeeMaps">
+			<map>
+				<entry key="1" value-ref="emp1"/>
+				<entry key="2" value-ref="emp2"/>
+				<entry key="3" value-ref="emp3"/>
+			</map>
+		</property>	
+3、spring容器实现继承关系
+	配置如下：
+	
+4、配置properties属性
+	配置如下:
+	<!-- 给Properties注入值 -->
+	<property name="properties">
+		<props>
+			<prop key="1">张子凡</prop>
+			<prop key="2">林轩</prop>
+			<prop key="3">李星云</prop>
+		</props>
+	</property>	
+5、通过构造函数注入
+	配置如下：
+	<!-- 通过构造函数配置bean -->	
+	<bean id="emp4" class="com.rhwayfun.ssh.spring.demo.Employee">
+		<constructor-arg index="0" type="java.lang.String" value="姬如雪"/>
+		<constructor-arg index="1" type="int" value="22"/>
+	</bean>
+6、分散注入
+	配置如下：
+	<!-- 加载db.properties文件 -->
+	<context:property-placeholder location="classpath:com/rhwayfun/ssh/spring/demo/db*.properties"/>
+	<!-- 配置dbUtils -->
+	<bean id="dbUtils" class="com.rhwayfun.ssh.spring.demo.DbUtils">
+		<property name="drv" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="usr" value="${jdbc.username}"/>
+		<property name="pwd" value="${jdbc.password}"/>
+	</bean>
+	

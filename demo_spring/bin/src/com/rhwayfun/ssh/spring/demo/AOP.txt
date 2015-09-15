@@ -1,0 +1,59 @@
+	AOP：面向切面编程
+1、概念
+	对全部对象或者一类对象进行编程。AOP的核心是在不增加代码的条件下，还增加程序的功能
+	面前面向AOP编程主要用在Spring框架比较多，实际项目用的并不多
+2、AOP原理
+	2.1  原理
+	在程序的执行过程中，有一个个方法被连续执行，每个方法称为一个连接点，当方法执行完毕，程序执行完毕。AOP要实现
+	的就是在一个个方法的连接点插入通知（实际上可以理解为公共的功能模块），这里插入的通知的功能就理解为切面
+	2.2 概念
+	切面：要实现的交叉功能
+	连接点：应用程序执行过程中要插入切面的地点，是静态概念
+	切入点：当连接点执行了通知，该连接点就编程切入点，是动态概念
+	通知：实际上就是切面的具体实现
+		通知的种类：前置通知、后置通知、环绕通知、异常通知
+		a. 前置通知
+		b. 环绕通知
+		c. 后置通知
+		d. 异常通知
+		e. 引入通知
+	引入：为类添加新方法和属性
+	目标对象：被代理对象
+	代理：把通知切入目标对象创建的对象
+	织入：将通知切入目标对象创建对象的过程
+	2.3  步骤
+	第一步：配置被代理对象：实现某个接口
+		在AOP中，都是面向接口编程
+	第二步：配置通知
+	第三步：配置代理对象
+		a. 配置代理接口集合
+		b. 将通知织入被代理对象
+		c. 配置目标对象，也就是被代理对象
+	最后的配置是这样的：
+	
+	<!-- 配置被代理的对象 -->
+	<bean id="testService" class="com.rhwayfun.ssh.spring.demo.aop.TestServiceImpl">
+		<property name="name" value="rhwayfun"/>
+	</bean>
+	<!-- 配置前置通知 -->
+	<bean id="testMethodBefore" class="com.rhwayfun.ssh.spring.demo.aop.TestMethodBefore"/>
+	<!-- 配置代理对象 -->
+	<bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- 配置代理接口集合：就是要代理的接口对象 -->
+		<property name="proxyInterfaces">
+			<list>
+				<value>com.rhwayfun.ssh.spring.demo.aop.TestService</value>
+				<value>com.rhwayfun.ssh.spring.demo.aop.TestService2</value>
+			</list>
+		</property>
+		<!-- 把前置通知交给代理对象管理：这里的通知可以理解为拦截器-->
+		<property name="interceptorNames">
+			<value>testMethodBefore</value>
+		</property>
+		<!-- 指定要代理的对象 -->
+		<property name="target" ref="testService"/>
+	</bean>
+	
+3、补充
+	applicationContext.getBean("proxyFactoryBean")返回的对象类型
+	返回一个代理对象，如果实现了接口，spring会使用JDK动态代理技术，否则使用CGLIB动态代理技术	

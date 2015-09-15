@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!--
+		将一个装饰器名字同一个特定的jsp页面绑定 defaultdir：指定装饰器jsp页面的存放位置 name：装饰器的名称
+		page：jsp装饰文件 pattern：表示要装饰的页面匹配符，/*表示装饰所有的页面
+	-->
+<decorators defaultdir="/decorators">
+	<decorator name="frame" page="frame.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+</decorators>

@@ -1,0 +1,117 @@
+
+1 JSP基础语法：两种注释类型、3个脚本元素、3个指令元素、8个动作指令
+	1.1 两种注释类型
+	 1.1.1 Html注释
+	 	<!--这是htm类型的注释-->
+	 1.1.2 JSP注释
+	 	<%-- 这是JSP类型的注释 --%>
+	 	<%/* 这是JSP类型的多行注释 */%>
+	1.2 3个脚本元素
+	 1.2.1 Declaration
+	 	用于声明变量和对象，可是Java基本类型和类对象
+	 	<%! int a = 1; %>,<%! Date date; %>
+	 1.2.2 Expression
+	 	<%= expression %>
+	 1.2.3 Scriptlet
+	 	脚本段用来包含一个有效的Java程序段，一个脚本段可以包含多个JSP语句、声明、表达式、变量、方法
+	 	<% code here %>
+	1.3 3个指令元素
+	 1.3.1 page
+	 	用于定义JSP文件的全局属性
+	 	<%@ page import="java.util.*,java.lang.*" %>
+	 1.3.2 include
+	 	使用include可以在JSP页面中包含一个静态文件，可以是html、jsp、文本或者是一段java代码
+	 	注意：不能在include中使用html、body等html标签
+	 	<%@ include file="相对位置" %>
+	 1.3.3 taglib
+	 	定一个标签库及其自定义标签的前缀
+	 	<%@ taglib uri="URIToTaglib" prefix="tagPrefix" %>
+	 	uri:统一资源定位器，根据标签的前缀对自定义的标签进行唯一的命名，可以是相对路径或者绝对路径
+	 	prefix:在自定义标签之前的前缀
+	 	<%@ taglib uri="路径" prefix="public" %>
+	 	<public:loop>
+	 		<%-- 要执行的代码 --%>
+	 	</public:loop>
+	1.4 8个动作指令
+	 1.4.1 <jsp:forward>页面跳转
+	 	该标签从一个JSP文件向另一个JSP文件传递包含用户请求的Request对象
+	 	<jsp:forward page="test.jsp">
+	 		<%-- 这里的<jsp:param/>向一个动态文件传递一个或者多个参数，该文件必须是动态文件 --%>
+	 		<jsp:param name="username" value="<%=username%>"/>
+	 		<jsp:param name="password" value="<%=passwrod%>"/>
+	 	</jsp:forward>
+	 1.4.2 <jsp:include>包含页面
+	 	包含一个静态或动态文件。如果仅仅是包含一个静态文件则作用与指令元素<%@ include%>的作用类似；如果包含一个动态文件，
+	 	则这个被包含的文件也会被编译执行
+	 	<%-- 这里的flush的属性必须为true --%>
+	 	<jsp:include page="1.html" flush="true">
+	 	<jsp:include page="login.jsp" flush="true">
+	 	</jsp:include>
+	 1.4.3 <jsp:useBean>创建Bean
+	 	创建一个Bean实例并指定他的名字和作用范围，创建Bean是为了定位或者示例一个Bean
+	 	<jsp:useBean id="myBean" scope="session" class="com.rhwayfun.jsp.po.User"></jsp:useBean>
+	 1.4.4 <jsp:setProperty>设置Bean属性
+	 	为创建Bean实例设置属性
+	 	<jsp:setProperty name="myBean" property="username" value="rhwayfun"/>
+	 1.4.5 <jsp:getProperty>获取Bean的属性
+	 	<jsp:getProperty name="myBean" property="username"></jsp:getProperty>
+	 1.4.6 <jsp:plugin>使用Applet插件
+	 	可以插入一个applet或一个bean
+	 1.4.7 <jsp:param>插件定义参数
+	 	可以为<jsp:plugin>创建的插件定义参数
+	 	<jsp:param name="" value="" />
+	 1.4.8 <jsp:fallback>插件错误提示信息
+	 	当插件不能正常显示信息时的错误提示
+	 
+	 
+2 JSP九大内置对象
+	Request、Response、Session、Application、Out、Cookie、Config、Page、PageContext、Exception
+	
+	2.1 Session
+		在第一个JSP被装载的时候自动创建，完成整个会话（从一个客户打开浏览器并连接到服务器开始，到客户关闭浏览器
+		离开这个服务器结束，称为一个会话）
+		
+		Session对象的常用方法包括：
+		(1) public String getId():获取Session对象编号
+		(2) setAttribute():为参数设置属性
+		(3) getAttribute():获取参数属性
+		(4) public boolean isNew():判断是否为一个新客户
+		
+	2.2 Application
+		服务器启动后就创建了一个Application对象，直到服务器关闭。所有客户都共享一个Application对象，这也是与Session
+		对象不同的地方
+		
+		Application对象的常用方法：
+		(1) setAttribute():为参数设置属性
+		(2) getAttribute():获取参数属性
+	
+	
+
+3 JDBC
+	3.1 Connection
+		与数据库建立连接，以下是建立数据连接的基本程序：
+		//定义数据库URL
+		//1、mysql数据库
+		String url_mysql = "jdbc:mysql://localhost/db?user=root&password=1209&useUnicode=true&characterEncoding=utf-8"
+		//2、oracle数据库
+		String url_orcl = "jdbc:oracle:thin:@localhost:1521:orcl//"
+		//3、sql Server
+		String url_sqlServer = "jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=pubs"
+		
+		//加载驱动程序
+		//1、mysql
+		Class.forName("org.gjt.mm.mysql.Driver");
+		//2、oracle
+		Class.forName("oracle.jdbc.dirver.OracleDriver")
+		//3、sql Server
+		Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver")
+		
+		//获得驱动连接
+		Connection conn = DriverManager.getConnection(url,username,passwrod);
+	3.2 DatabaseMetaData
+		了解数据库信息
+		DatabaseMetaData dataMata = conn.getMetaData();
+	3.3 Statement
+	3.4 ResultSet
+	3.5 PrepareStatement
+	3.6 CallableStatement
