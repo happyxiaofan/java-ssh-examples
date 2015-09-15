@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<!-- 配置表单组件 -->
+	<form-beans>
+		<!-- 添加登录表单组件 -->
+		<form-bean name="loginForm" type="com.rhwayfun.ssh.form.LoginForm"></form-bean>
+		<form-bean name="addEmpForm" type="com.rhwayfun.ssh.form.AddEmpForm"></form-bean>
+	</form-beans>
+	<!-- 配置操作表单的action -->
+	<action-mappings>
+		<!-- 配置登录表单的action -->
+		<action path="/login" name="loginForm" parameter="action">
+			<forward name="success" path="/welcome.jsp"></forward>
+			<forward name="failure" path="/login.jsp"></forward>
+		</action>
+		<action path="/emp" name="addEmpForm" parameter="action">
+			<forward name="addEmpUI" path="/addEmp.jsp"></forward>
+			<forward name="showEmps" path="/showEmps.jsp"></forward>
+			<forward name="modifyEmpUI" path="/modifyEmp.jsp"></forward>
+		</action>
+	</action-mappings>
+	
+	<!-- 配置全局跳转 -->
+	<global-forwards>
+		<forward name="addSuccess" path="/addSuccess.jsp"></forward>
+		<forward name="error" path="/error.jsp"></forward>
+	</global-forwards>
+	<!-- 配置资源文件 -->
+	<message-resources parameter="com.rhwayfun.ssh.resources.ApplicationResources_zh_CN" />
+	
+	<!-- 配置代理请求处理，这样配置的结果是ActionServlet会不再struts-config.xml
+		文件中寻找Action，而是在spring容器文件中寻找action
+	-->
+	<controller>
+	<set-property property="processorClass" value="org.springframework.web.struts.DelegatingRequestProcessor" />
+	</controller>
+	
+	<!-- 配置Validator校验器组件 
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property value="/WEB-INF/validator-rules.xml" property="pathnames"/>
+	</plug-in>-->
+</struts-config>
+

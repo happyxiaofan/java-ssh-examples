@@ -1,0 +1,91 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	
+	<!-- 启用注解扫描 -->
+	<context:annotation-config/>
+	<!-- 配置 TestSpring:用与配置spring是否配置正常-->
+	<bean id="testSpring" class="com.rhwayfun.ssh.demo.TestSpring">
+		<property name="message" value="spring"/>
+	</bean>
+	<!-- 配置EmployeeService -->
+	<bean id="employeeService" class="com.rhwayfun.ssh.service.impl.EmplyeeServiceImpl"/>
+	<!-- 配置DepartmentService -->
+	<bean id="departmentService" class="com.rhwayfun.ssh.service.impl.DepartmentServiceImpl"/>
+	
+	<!--这里是spring管理的action的bean 
+		配置struts中的action
+		name:就是原来struts-config.xml中的path的值	
+		class:要处理的action类
+		好处：使用spring接管action可以解决
+	 -->
+	<bean name="/login" class="com.rhwayfun.ssh.action.LoginAction" scope="prototype">
+		<property name="employeeService" ref="employeeService"/>
+	</bean>
+	<bean name="/emp" class="com.rhwayfun.ssh.action.EmployeeAction" scope="prototype">
+		<property name="employeeService" ref="employeeService"/>
+		<property name="departmentService" ref="departmentService"/>
+	</bean>
+	
+	<!-- 加载db.properties文件中的内容，db.properties文件中key命名要有一定的特殊规则 -->
+	<context:property-placeholder location="classpath:db.properties" />
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="10"/>
+		<property name="maxActive" value="30" />
+		<!-- 最大空闲值 -->
+		<property name="maxIdle" value="5" />
+		<!-- 最小空闲值 -->
+		<property name="minIdle" value="3"/>
+	</bean>
+	
+	<!-- 配置hibernate的会话工厂 
+		 hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+		 hibernate.cache.use_second_level_cache=true
+       	 hibernate.cache.use_query_cache=false
+	-->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	     <property name="dataSource" ref="dataSource"/>
+	     <!-- hibernate的对象映射文件 -->
+		 <property name="mappingResources">
+		    <list>
+		      <value>com/rhwayfun/ssh/pojo/Employee.hbm.xml</value>
+		      <value>com/rhwayfun/ssh/pojo/Department.hbm.xml</value>
+		    </list>
+		 </property>
+	     <property name="hibernateProperties">
+		    <value>
+		        hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+		        hibernate.hbm2ddl.auto=update
+		        hibernate.show_sql=true
+		        hibernate.format_sql=true
+		        hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+		 		hibernate.cache.use_second_level_cache=false
+       	 		hibernate.cache.use_query_cache=false
+		      </value>
+	     </property>
+	</bean>
+	<!-- 使用事务管理器统一管理SessionFactory的事务 -->
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	  	<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 启用事务注解 -->
+	<tx:annotation-driven transaction-manager="txManager"/>
+	
+</beans>

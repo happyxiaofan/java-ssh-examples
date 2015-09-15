@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping package="com.rhwayfun.ssh.pojo">
+	<!-- name:类名
+		table:表名 -->
+	<class name="Employee" table="employee">
+		<!-- 二级缓存 -->
+		<cache usage="read-write" region="com.rhwayfun.ssh.pojo.Employee" />
+		<!-- 主键 -->
+		<id name="id">
+			<generator class="native"/>
+		</id>
+		<property name="ename" type="string" length="30" not-null="true" />
+		<property name="email" type="string" length="20"/>
+		<property name="hiredate" type="date"/>
+		<property name="salary" type="float"/>
+		<property name="password" type="string"/>
+		<property name="grade" type="integer"/>
+		<!-- 一个雇员只能属于一个部门 -->
+		<many-to-one name="department" class="Department" column="department_id"/>
+	</class>
+</hibernate-mapping>

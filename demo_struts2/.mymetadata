@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-module
   type="WEB"
-  name="demo_jsp_javabean_servlet"
-  id="myeclipse.1442299362371"
-  j2ee-spec="1.4"
-  archive="demo_jsp_javabean_servlet.war">
+  name="demo_struts2"
+  id="myeclipse.1441023534300"
+  context-root="/demo_struts2"
+  j2ee-spec="5.0"
+  archive="demo_struts2.war">
   <attributes>
     <attribute name="webrootdir" value="WebRoot" />
   </attributes>

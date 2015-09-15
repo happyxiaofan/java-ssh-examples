@@ -1,0 +1,32 @@
+
+	ssh整合笔记
+1、整合spring
+	
+2、整合spring和hibernate
+
+3、整合spring+hibernate+struts1.x
+
+4、整合特别说明
+	4.1   使用注解的方式
+	以配置EmployeeService的过程为例，说明使用注解的方式进行配置
+	第一步：重新配置bean
+	<bean id="xx" class="xxx"/>
+	第二步：在添加注解的属性中添加@Resource注解
+	第三步：在applicationContext.xml中启用注解
+	<!-- 启用注解扫描 -->
+	<context:annotation-config/>
+	4.2   如何解决懒加载的问题
+	a. 明确初始化
+	Hibernate.initialize(Department.class);
+	b. 在对象映射文件中添加lazy="false"，取消懒加载
+	a和b方法不管是否在jsp页面中使用部门的名称，都要向数据库发出请求
+	c. spring中提供了openSessionInView的方法解决懒加载，只需要在web.xml中添加下面的配置：
+	<filter>
+	        <filter-name>OpenSessionInViewFilter</filter-name>
+	        <filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	        <filter-name>OpenSessionInViewFilter</filter-name>
+	        <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	缺点：session的会话周期延长
