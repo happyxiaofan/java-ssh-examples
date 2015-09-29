@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<%@ page import="com.stumis.acco.bean.*" %>
+<%@ page import="com.rhwayfun.ssh.bean.*" %>
 <%
 	//获取注册信息
 	String username = request.getParameter("username");

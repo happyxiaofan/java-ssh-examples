@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
-<%@ page import="com.stumis.acco.bean.*" %>
+<%@ page import="com.rhwayfun.ssh.bean.*" %>
 <%
 	String username = request.getParameter("username");
 	String password = request.getParameter("password");
